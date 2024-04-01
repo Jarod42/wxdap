@@ -1,6 +1,7 @@
 ![Mac-OS-badge](https://github.com/eranif/wxdap/actions/workflows/macos.yml/badge.svg)
 ![Unix-badge](https://github.com/eranif/wxdap/actions/workflows/ubuntu.yml/badge.svg)
 ![windows-badge](https://github.com/eranif/wxdap/actions/workflows/windows.yml/badge.svg)
+![msys2-badge](https://github.com/eranif/wxdap/actions/workflows/msys2.yml/badge.svg)
 
 # wxdap
 Provide a wxWidgets library for implementing DAP (Debug Adapter Protocol) clients
