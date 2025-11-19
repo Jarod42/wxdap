@@ -23,14 +23,21 @@ jobs:
 
     steps:
 
+    - name: Install wxDap's dependencies
+      run: |
+        brew install git || true
+        brew install cmake || true
+        brew install libssh || true
+        brew install hunspell || true
+
     # WxWidgets
     - name: Checkout
       uses: actions/checkout@v4
       with:
           repository: wxWidgets/wxWidgets
-          path: wxWidgets
-          ref: v3.2.4
+          ref: v3.2.8
           submodules: recursive
+          path: wxWidgets
 
     - name: Build and install wxWidgets
       run: |
@@ -39,6 +46,7 @@ jobs:
         ../configure --enable-shared --enable-monolithic --with-osx_cocoa CXX='clang++ -std=c++17 -stdlib=libc++ -I../src/tiff/libtiff' CC=clang --disable-debug --disable-mediactrl --enable-stl
         make -j$(sysctl -n hw.physicalcpu)
         sudo make install
+
 
     # wxdap
     - name: Checkout wxdap
