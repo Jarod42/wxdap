@@ -12,7 +12,7 @@ extern void wxC10A1InitBitmapResources();
 namespace
 {
 // return the wxBORDER_SIMPLE that matches the current application theme
-wxBorder get_border_simple_theme_aware_bit()
+[[maybe_unused]] wxBorder get_border_simple_theme_aware_bit()
 {
 #if wxVERSION_NUMBER >= 3300 && defined(__WXMSW__)
     return wxSystemSettings::GetAppearance().IsDark() ? wxBORDER_SIMPLE : wxBORDER_DEFAULT;

@@ -537,6 +537,8 @@ Json InitializeRequestArguments::To() const
     json.Add("columnsStartAt1", columnsStartAt1);
     json.Add("pathFormat", pathFormat);
     json.Add("supportsInvalidatedEvent", supportsInvalidatedEvent);
+    json.Add("supportsRunInTerminalRequest", supportsRunInTerminalRequest);
+    json.Add("supportsArgsCanBeInterpretedByShell", supportsArgsCanBeInterpretedByShell);
     return json;
 }
 
@@ -550,6 +552,8 @@ void InitializeRequestArguments::From(const Json& json)
     columnsStartAt1 = json["columnsStartAt1"].GetBool();
     pathFormat = json["pathFormat"].GetString();
     supportsInvalidatedEvent = json["supportsInvalidatedEvent"].GetBool();
+    supportsRunInTerminalRequest = json["supportsRunInTerminalRequest"].GetBool();
+    supportsArgsCanBeInterpretedByShell = json["supportsArgsCanBeInterpretedByShell"].GetBool();
 }
 
 // ----------------------------------------

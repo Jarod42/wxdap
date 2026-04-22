@@ -548,6 +548,16 @@ struct WXDLLIMPEXP_DAP InitializeRequestArguments : public Any {
      * which is the native format. Values: 'path', 'uri', etc.
      */
     wxString pathFormat = "path";
+
+    /**
+     * Client supports the `runInTerminal` request.
+     */
+    bool supportsRunInTerminalRequest = false;
+    /**
+     * Client supports the `argsCanBeInterpretedByShell` attribute on the
+     * `runInTerminal` request.
+     */
+    bool supportsArgsCanBeInterpretedByShell = false;
     ANY_CLASS(InitializeRequestArguments);
     JSON_SERIALIZE();
 };
