@@ -224,7 +224,7 @@ public:
     /**
      * @brief initiate the handshake between the server and the client
      */
-    void Initialize(const dap::InitializeRequestArguments* initArgs = nullptr);
+    void Initialize(dap::InitializeRequestArguments&& initArgs);
 
     /**
      * @brief are we still connected?
@@ -254,6 +254,11 @@ public:
      */
     void Launch(std::vector<wxString>&& cmd, const wxString& workingDirectory = wxEmptyString,
                 const dap::Environment& env = {});
+    /**
+     * @brief start the debuggee
+     */
+    void Launch(LaunchRequestArguments&& args);
+
     /**
      * @brief attach to dap server
      */

@@ -173,10 +173,11 @@ void MainFrame::InitializeClient()
     // The protocol starts by us sending an initialize request
     dap::InitializeRequestArguments args;
     args.linesStartAt1 = true;
-
+    args.supportsRunInTerminalRequest = true;
+    args.supportsArgsCanBeInterpretedByShell = true;
     m_frame_id = wxNOT_FOUND;
     m_current_source = {};
-    m_client.Initialize(&args);
+    m_client.Initialize(std::move(args));
 }
 
 void MainFrame::OnNext(wxCommandEvent& event)
@@ -245,7 +246,10 @@ void MainFrame::OnInitializeResponse(DAPEvent& event)
             exe.Replace("\\", "/");
         }
 
-        m_client.Launch({ exe }, ::wxGetCwd());
+        dap::LaunchRequestArguments args;
+        args.program = exe;
+        args.cwd = ::wxGetCwd();
+        m_client.Launch(std::move(args));
     }
 }
 

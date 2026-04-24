@@ -6,6 +6,7 @@
 
 #include <functional>
 #include <memory>
+#include <optional>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -628,6 +629,9 @@ struct WXDLLIMPEXP_DAP LaunchRequestArguments : public Any {
 
     /// If provided, stop at main
     bool stopAtBeginningOfMainSubprogram = true;
+
+    std::optional<wxString> console{ std::nullopt };
+    std::optional<bool> runInTerminal{ std::nullopt };
 
     ANY_CLASS(LaunchRequestArguments);
     JSON_SERIALIZE();

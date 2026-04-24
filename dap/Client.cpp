@@ -462,18 +462,12 @@ void dap::Client::Reset()
 }
 
 /// API
-void dap::Client::Initialize(const dap::InitializeRequestArguments* initArgs)
+void dap::Client::Initialize(dap::InitializeRequestArguments&& initArgs)
 {
     // Send initialize request
     auto req = MakeRequest<InitializeRequest>();
-    if (initArgs) {
-        req->arguments = *initArgs;
+    req->arguments = std::move(initArgs);
 
-    } else {
-        // use the defaults
-        req->arguments.clientID = "wxdap";
-        req->arguments.clientName = "wxdap";
-    }
     SendRequest(req);
     m_handshake_state = eHandshakeState::kInProgress;
 }
@@ -497,20 +491,26 @@ void dap::Client::ConfigurationDone()
     SendRequest(req);
 }
 
-void dap::Client::Launch(std::vector<wxString>&& cmd, const wxString& workingDirectory, const dap::Environment& env)
+void dap::Client::Launch(LaunchRequestArguments&& args)
 {
     m_active_thread_id = wxNOT_FOUND;
     auto req = MakeRequest<LaunchRequest>();
-    req->arguments.program = cmd[0];
+    req->arguments = std::move(args);
+    SendRequest(req);
+}
+
+void dap::Client::Launch(std::vector<wxString>&& cmd, const wxString& workingDirectory, const dap::Environment& env)
+{
+    LaunchRequestArguments args;
+    args.program = cmd[0];
 
     cmd.erase(cmd.begin());
-    req->arguments.args = cmd; // the remainder are the args
+    args.args = cmd; // the remainder are the args
 
     // set the working directory & env vars
-    req->arguments.cwd = workingDirectory;
-    req->arguments.env = env;
-
-    SendRequest(req);
+    args.cwd = workingDirectory;
+    args.env = env;
+    Launch(std::move(args));
 }
 
 void dap::Client::GetThreads()

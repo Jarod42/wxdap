@@ -8,6 +8,10 @@
 #define PROTOCOL_MSG_TO() Json json = ProtocolMessage::To()
 #define EVENT_TO() Json json = Event::To()
 #define ADD_PROP(obj) json.Add(#obj, obj)
+#define ADD_OPTIONAL_PROP(obj) \
+    if (obj.has_value()) {     \
+        json.Add(#obj, *obj);  \
+    }
 
 #define REQUEST_FROM() Request::From(json)
 #define RESPONSE_FROM() Response::From(json)
@@ -16,6 +20,10 @@
 #define READ_OBJ(obj) obj.From(json[#obj])
 #define ADD_OBJ(obj) json.AddObject(#obj, obj.To())
 #define GET_PROP(prop, Type) prop = json[#prop].Get##Type()
+#define GET_OPTIONAL_PROP(prop, Type) \
+    if (json.Contains(#prop))         \
+    prop = json[#prop].Get##Type()
+
 #define ADD_BODY() Json body = json.AddObject("body")
 #define ADD_BODY_PROP(prop) body.Add(#prop, prop)
 
@@ -662,6 +670,8 @@ Json LaunchRequestArguments::To() const
     ADD_PROP(args);
     ADD_PROP(cwd);
     ADD_PROP(stopAtBeginningOfMainSubprogram);
+    ADD_OPTIONAL_PROP(console);
+    ADD_OPTIONAL_PROP(runInTerminal);
     auto env_obj = env.To();
     if (env_obj.IsOK()) {
         json.Add("env", env.To());
@@ -676,6 +686,8 @@ void LaunchRequestArguments::From(const Json& json)
     GET_PROP(args, StringArray);
     GET_PROP(cwd, String);
     GET_PROP(stopAtBeginningOfMainSubprogram, Bool);
+    GET_OPTIONAL_PROP(console, String);
+    GET_OPTIONAL_PROP(runInTerminal, Bool);
     env.From(json["env"]);
 }
 

@@ -66,7 +66,7 @@ public:
      */
     wxString GetName() const
     {
-        if(m_cjson == nullptr || !m_cjson->string) {
+        if (m_cjson == nullptr || !m_cjson->string) {
             return "";
         }
         return wxString(m_cjson->string);
@@ -133,6 +133,9 @@ public:
      */
     Json AddObject(const wxString& name, const Json& obj) { return AddObject(name.mb_str(wxConvUTF8).data(), obj); }
     Json AddObject(const char* name, const Json& obj);
+
+    bool Contains(const wxString& name) const;
+    bool Contains(const char* name) const;
 
     /**
      * @brief return value as wxString
