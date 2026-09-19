@@ -48,10 +48,9 @@ jobs:
       run: |
         mkdir wxWidgets/build-release
         cd wxWidgets/build-release
-        ../configure --enable-shared --enable-monolithic --with-osx_cocoa CXX='clang++ -std=c++17 -stdlib=libc++ -I../src/tiff/libtiff' CC=clang --disable-debug --disable-mediactrl --enable-stl
+        cmake .. -DCMAKE_BUILD_TYPE=Release -DwxBUILD_DEBUG_LEVEL=0  -DwxBUILD_MONOLITHIC=1 -DwxUSE_SYS_LIBS=OFF -DwxUSE_LUNASVG=OFF -DwxUSE_STL=1
         make -j$(sysctl -n hw.physicalcpu)
         sudo make install
-
 
     # wxdap
     - name: Checkout wxdap
