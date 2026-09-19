@@ -13,7 +13,7 @@ class WXDLLIMPEXP_DAP SocketServer : public Socket
 {
 public:
     SocketServer();
-    virtual ~SocketServer();
+    ~SocketServer() override;
 
 protected:
     /**

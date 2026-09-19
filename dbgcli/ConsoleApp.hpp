@@ -16,7 +16,7 @@ protected:
 
 public:
     DAPCli();
-    virtual ~DAPCli();
+    ~DAPCli() override;
 
     void DoExitApp();
     bool OnInit() override;

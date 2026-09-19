@@ -15,7 +15,7 @@ class WXDLLIMPEXP_DAP SocketClient : public Socket
 
 public:
     SocketClient();
-    virtual ~SocketClient();
+    ~SocketClient() override;
 
     /**
      * @brief connect to a remote server using ip/port

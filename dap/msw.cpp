@@ -140,12 +140,12 @@ Process* ExecuteProcess(const wxString& cmd, const wxString& workingDir)
     // Create a pipe for the child process's STDERR.
     if (!CreatePipe(&prc->m_stderrRead, &prc->m_stderrWrite, &saAttr, 0)) {
         delete prc;
-        return NULL;
+        return nullptr;
     }
     // Create a pipe for the child process's STDIN.
     if (!CreatePipe(&prc->m_stdinRead, &prc->m_stdinWrite, &saAttr, 0)) {
         delete prc;
-        return NULL;
+        return nullptr;
     }
 
     // Execute the child process
@@ -172,7 +172,7 @@ Process* ExecuteProcess(const wxString& cmd, const wxString& workingDir)
         prc->m_dwProcessId = prc->m_piProcInfo.dwProcessId;
     } else {
         delete prc;
-        return NULL;
+        return nullptr;
     }
 
     prc->StartThreads();

@@ -62,7 +62,7 @@ static char* cJSON_strdup(const char* str)
 
     len = strlen(str) + 1;
     if(!(copy = (char*)cJSON_malloc(len)))
-        return 0;
+        return nullptr;
     memcpy(copy, str, len);
     return copy;
 }
@@ -179,7 +179,7 @@ static const char* parse_string(cJsonDap* item, const char* str)
     unsigned uc, uc2;
     if(*str != '\"') {
         ep = str;
-        return 0;
+        return nullptr;
     } /* not a string! */
 
     while(*ptr != '\"' && *ptr && ++len)
@@ -188,7 +188,7 @@ static const char* parse_string(cJsonDap* item, const char* str)
 
     out = (char*)cJSON_malloc(len + 1); /* This is how long we need for the string, roughly. */
     if(!out)
-        return 0;
+        return nullptr;
 
     ptr = str + 1;
     ptr2 = out;
@@ -291,7 +291,7 @@ static char* print_string_ptr(const char* str)
 
     out = (char*)cJSON_malloc(len + 3);
     if(!out)
-        return 0;
+        return nullptr;
 
     ptr2 = out;
     ptr = str;
@@ -357,13 +357,13 @@ static const char* skip(const char* in)
 cJsonDap* cJSON_Parse(const char* value)
 {
     cJsonDap* c = cJSON_New_Item();
-    ep = 0;
+    ep = nullptr;
     if(!c)
-        return 0; /* memory fail */
+        return nullptr; /* memory fail */
 
     if(!parse_value(c, skip(value))) {
         cJSON_Delete(c);
-        return 0;
+        return nullptr;
     }
     return c;
 }
@@ -376,7 +376,7 @@ char* cJSON_PrintUnformatted(cJsonDap* item) { return print_value(item, 0, 0); }
 static const char* parse_value(cJsonDap* item, const char* value)
 {
     if(!value)
-        return 0; /* Fail on null. */
+        return nullptr; /* Fail on null. */
     if(!strncmp(value, "null", 4)) {
         item->type = cJsonDap_Null;
         return value + 4;
@@ -404,15 +404,15 @@ static const char* parse_value(cJsonDap* item, const char* value)
     }
 
     ep = value;
-    return 0; /* failure. */
+    return nullptr; /* failure. */
 }
 
 /* Render a value to text. */
 static char* print_value(cJsonDap* item, int depth, int fmt)
 {
-    char* out = 0;
+    char* out = nullptr;
     if(!item)
-        return 0;
+        return nullptr;
     switch((item->type) & 255) {
     case cJsonDap_Null:
         out = cJSON_strdup("null");
@@ -445,7 +445,7 @@ static const char* parse_array(cJsonDap* item, const char* value)
     cJsonDap* child;
     if(*value != '[') {
         ep = value;
-        return 0;
+        return nullptr;
     } /* not an array! */
 
     item->type = cJsonDap_Array;
@@ -455,34 +455,34 @@ static const char* parse_array(cJsonDap* item, const char* value)
 
     item->child = child = cJSON_New_Item();
     if(!item->child)
-        return 0;                                  /* memory fail */
+        return nullptr;                                  /* memory fail */
     value = skip(parse_value(child, skip(value))); /* skip any spacing, get the value. */
     if(!value)
-        return 0;
+        return nullptr;
 
     while(*value == ',') {
         cJsonDap* new_item;
         if(!(new_item = cJSON_New_Item()))
-            return 0; /* memory fail */
+            return nullptr; /* memory fail */
         child->next = new_item;
         new_item->prev = child;
         child = new_item;
         value = skip(parse_value(child, skip(value + 1)));
         if(!value)
-            return 0; /* memory fail */
+            return nullptr; /* memory fail */
     }
 
     if(*value == ']')
         return value + 1; /* end of array */
     ep = value;
-    return 0; /* malformed. */
+    return nullptr; /* malformed. */
 }
 
 /* Render an array to text */
 static char* print_array(cJsonDap* item, int depth, int fmt)
 {
     char** entries;
-    char *out = 0, *ptr, *ret;
+    char *out = nullptr, *ptr, *ret;
     int len = 5;
     cJsonDap* child = item->child;
     int numentries = 0, i = 0, fail = 0;
@@ -493,7 +493,7 @@ static char* print_array(cJsonDap* item, int depth, int fmt)
     /* Allocate an array to hold the values for each */
     entries = (char**)cJSON_malloc(numentries * sizeof(char*));
     if(!entries)
-        return 0;
+        return nullptr;
     memset(entries, 0, numentries * sizeof(char*));
     /* Retrieve all the results: */
     child = item->child;
@@ -520,7 +520,7 @@ static char* print_array(cJsonDap* item, int depth, int fmt)
             if(entries[i])
                 cJSON_free(entries[i]);
         cJSON_free(entries);
-        return 0;
+        return nullptr;
     }
 
     /* Compose the output array. */
@@ -550,7 +550,7 @@ static const char* parse_object(cJsonDap* item, const char* value)
     cJsonDap* child;
     if(*value != '{') {
         ep = value;
-        return 0;
+        return nullptr;
     } /* not an object! */
 
     item->type = cJsonDap_Object;
@@ -560,52 +560,52 @@ static const char* parse_object(cJsonDap* item, const char* value)
 
     item->child = child = cJSON_New_Item();
     if(!item->child)
-        return 0;
+        return nullptr;
     value = skip(parse_string(child, skip(value)));
     if(!value)
-        return 0;
+        return nullptr;
     child->string = child->valuestring;
-    child->valuestring = 0;
+    child->valuestring = nullptr;
     if(*value != ':') {
         ep = value;
-        return 0;
+        return nullptr;
     }                                                  /* fail! */
     value = skip(parse_value(child, skip(value + 1))); /* skip any spacing, get the value. */
     if(!value)
-        return 0;
+        return nullptr;
 
     while(*value == ',') {
         cJsonDap* new_item;
         if(!(new_item = cJSON_New_Item()))
-            return 0; /* memory fail */
+            return nullptr; /* memory fail */
         child->next = new_item;
         new_item->prev = child;
         child = new_item;
         value = skip(parse_string(child, skip(value + 1)));
         if(!value)
-            return 0;
+            return nullptr;
         child->string = child->valuestring;
-        child->valuestring = 0;
+        child->valuestring = nullptr;
         if(*value != ':') {
             ep = value;
-            return 0;
+            return nullptr;
         }                                                  /* fail! */
         value = skip(parse_value(child, skip(value + 1))); /* skip any spacing, get the value. */
         if(!value)
-            return 0;
+            return nullptr;
     }
 
     if(*value == '}')
         return value + 1; /* end of array */
     ep = value;
-    return 0; /* malformed. */
+    return nullptr; /* malformed. */
 }
 
 /* Render an object to text. */
 static char* print_object(cJsonDap* item, int depth, int fmt)
 {
-    char **entries = 0, **names = 0;
-    char *out = 0, *ptr, *ret, *str;
+    char **entries = nullptr, **names = nullptr;
+    char *out = nullptr, *ptr, *ret, *str;
     int len = 7, i = 0, j;
     cJsonDap* child = item->child;
     int numentries = 0, fail = 0;
@@ -615,11 +615,11 @@ static char* print_object(cJsonDap* item, int depth, int fmt)
     /* Allocate space for the names and the objects */
     entries = (char**)cJSON_malloc(numentries * sizeof(char*));
     if(!entries)
-        return 0;
+        return nullptr;
     names = (char**)cJSON_malloc(numentries * sizeof(char*));
     if(!names) {
         cJSON_free(entries);
-        return 0;
+        return nullptr;
     }
     memset(entries, 0, sizeof(char*) * numentries);
     memset(names, 0, sizeof(char*) * numentries);
@@ -655,7 +655,7 @@ static char* print_object(cJsonDap* item, int depth, int fmt)
         }
         cJSON_free(names);
         cJSON_free(entries);
-        return 0;
+        return nullptr;
     }
 
     /* Compose the output: */
@@ -729,11 +729,11 @@ static cJsonDap* create_reference(cJsonDap* item)
 {
     cJsonDap* ref = cJSON_New_Item();
     if(!ref)
-        return 0;
+        return nullptr;
     memcpy(ref, item, sizeof(cJsonDap));
-    ref->string = 0;
+    ref->string = nullptr;
     ref->type |= cJsonDap_IsReference;
-    ref->next = ref->prev = 0;
+    ref->next = ref->prev = nullptr;
     return ref;
 }
 
@@ -775,14 +775,14 @@ cJsonDap* cJSON_DetachItemFromArray(cJsonDap* array, int which)
     while(c && which > 0)
         c = c->next, which--;
     if(!c)
-        return 0;
+        return nullptr;
     if(c->prev)
         c->prev->next = c->next;
     if(c->next)
         c->next->prev = c->prev;
     if(c == array->child)
         array->child = c->next;
-    c->prev = c->next = 0;
+    c->prev = c->next = nullptr;
     return c;
 }
 void cJSON_DeleteItemFromArray(cJsonDap* array, int which) { cJSON_Delete(cJSON_DetachItemFromArray(array, which)); }
@@ -794,7 +794,7 @@ cJsonDap* cJSON_DetachItemFromObject(cJsonDap* object, const char* string)
         i++, c = c->next;
     if(c)
         return cJSON_DetachItemFromArray(object, i);
-    return 0;
+    return nullptr;
 }
 void cJSON_DeleteItemFromObject(cJsonDap* object, const char* string)
 {
@@ -817,7 +817,7 @@ void cJSON_ReplaceItemInArray(cJsonDap* array, int which, cJsonDap* newitem)
         array->child = newitem;
     else
         newitem->prev->next = newitem;
-    c->next = c->prev = 0;
+    c->next = c->prev = nullptr;
     cJSON_Delete(c);
 }
 void cJSON_ReplaceItemInObject(cJsonDap* object, const char* string, cJsonDap* newitem)
@@ -899,7 +899,7 @@ cJsonDap* cJSON_CreateObject()
 cJsonDap* cJSON_CreateIntArray(int* numbers, int count)
 {
     int i;
-    cJsonDap *n = 0, *p = 0, *a = cJSON_CreateArray();
+    cJsonDap *n = nullptr, *p = nullptr, *a = cJSON_CreateArray();
     for(i = 0; a && i < count; i++) {
         n = cJSON_CreateNumber(numbers[i]);
         if(!i)
@@ -913,7 +913,7 @@ cJsonDap* cJSON_CreateIntArray(int* numbers, int count)
 cJsonDap* cJSON_CreateFloatArray(float* numbers, int count)
 {
     int i;
-    cJsonDap *n = 0, *p = 0, *a = cJSON_CreateArray();
+    cJsonDap *n = nullptr, *p = nullptr, *a = cJSON_CreateArray();
     for(i = 0; a && i < count; i++) {
         n = cJSON_CreateNumber(numbers[i]);
         if(!i)
@@ -927,7 +927,7 @@ cJsonDap* cJSON_CreateFloatArray(float* numbers, int count)
 cJsonDap* cJSON_CreateDoubleArray(double* numbers, int count)
 {
     int i;
-    cJsonDap *n = 0, *p = 0, *a = cJSON_CreateArray();
+    cJsonDap *n = nullptr, *p = nullptr, *a = cJSON_CreateArray();
     for(i = 0; a && i < count; i++) {
         n = cJSON_CreateNumber(numbers[i]);
         if(!i)
@@ -941,7 +941,7 @@ cJsonDap* cJSON_CreateDoubleArray(double* numbers, int count)
 cJsonDap* cJSON_CreateStringArray(const char** strings, int count)
 {
     int i;
-    cJsonDap *n = 0, *p = 0, *a = cJSON_CreateArray();
+    cJsonDap *n = nullptr, *p = nullptr, *a = cJSON_CreateArray();
     for(i = 0; a && i < count; i++) {
         n = cJSON_CreateString(strings[i]);
         if(!i)

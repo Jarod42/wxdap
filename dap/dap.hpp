@@ -203,7 +203,7 @@ struct WXDLLIMPEXP_DAP Request : public ProtocolMessage {
     wxString command;
 
     Request() { type = "request"; }
-    virtual ~Request() = 0; // force to abstract class
+    ~Request() override = 0; // force to abstract class
     JSON_SERIALIZE();
 };
 
@@ -222,7 +222,7 @@ struct WXDLLIMPEXP_DAP CancelRequest : public Request {
 struct WXDLLIMPEXP_DAP Event : public ProtocolMessage {
     wxString event;
     Event() { type = "event"; }
-    virtual ~Event() = 0; // force to abstract class
+    ~Event() override = 0; // force to abstract class
     JSON_SERIALIZE();
 };
 
@@ -242,7 +242,7 @@ struct WXDLLIMPEXP_DAP Response : public ProtocolMessage {
     wxString message;
 
     Response() { type = "response"; }
-    virtual ~Response() = 0; // force to abstract class
+    ~Response() override = 0; // force to abstract class
     JSON_SERIALIZE();
 };
 

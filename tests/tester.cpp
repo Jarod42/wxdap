@@ -1,7 +1,7 @@
 #include "tester.h"
 #include <stdio.h>
 
-Tester* Tester::ms_instance = 0;
+Tester* Tester::ms_instance = nullptr;
 
 Tester::Tester() {}
 
@@ -9,7 +9,7 @@ Tester::~Tester() {}
 
 Tester* Tester::Instance()
 {
-    if(ms_instance == 0) {
+    if(ms_instance == nullptr) {
         ms_instance = new Tester();
     }
     return ms_instance;
@@ -20,7 +20,7 @@ void Tester::Release()
     if(ms_instance) {
         delete ms_instance;
     }
-    ms_instance = 0;
+    ms_instance = nullptr;
 }
 
 void Tester::AddTest(ITest* t) { m_tests.push_back(t); }

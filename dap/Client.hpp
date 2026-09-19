@@ -45,7 +45,7 @@ class WXDLLIMPEXP_DAP SocketTransport : public Transport
 
 public:
     SocketTransport();
-    virtual ~SocketTransport();
+    ~SocketTransport() override;
 
     bool Read(std::string& buffer, int msTimeout) override;
     size_t Send(const std::string& buffer) override;
@@ -59,7 +59,7 @@ class WXDLLIMPEXP_DAP StdoutTransport : public Transport
 {
 public:
     StdoutTransport();
-    virtual ~StdoutTransport();
+    ~StdoutTransport() override;
 
     bool Read(std::string& buffer, int msTimeout) override;
     size_t Send(const std::string& buffer) override;
@@ -174,7 +174,7 @@ protected:
 
 public:
     Client();
-    virtual ~Client();
+    ~Client() override;
 
     /**
      * @brief enable/disable logging events

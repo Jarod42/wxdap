@@ -121,7 +121,7 @@ public:
     MainFrameBase(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("DAP UI"),
                   const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(800, 600),
                   long style = wxDEFAULT_FRAME_STYLE);
-    virtual ~MainFrameBase();
+    ~MainFrameBase() override;
 };
 
 #endif

@@ -17,7 +17,7 @@ public:
     DAPEvent(wxEventType commandType = wxEVT_NULL, int winid = 0);
     DAPEvent(const DAPEvent& event);
     DAPEvent& operator=(const DAPEvent& src);
-    virtual ~DAPEvent();
+    ~DAPEvent() override;
 
     void SetAnyObject(std::shared_ptr<dap::Any> any) { m_object = any; }
     void SetOriginatingRequest(std::shared_ptr<dap::Request> req) { m_originatingRequest = req; }
