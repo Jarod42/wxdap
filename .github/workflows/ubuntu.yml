@@ -21,6 +21,11 @@ jobs:
   linux:
     runs-on: ubuntu-latest
 
+    strategy:
+      fail-fast: false
+      matrix:
+        wx-version: ['v3.2.8.1']
+
     steps:
     # wxWidgets
     - name: Install dependencies for wxWidgets

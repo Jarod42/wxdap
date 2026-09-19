@@ -21,6 +21,11 @@ jobs:
   windows:
     runs-on: windows-latest
 
+    strategy:
+      fail-fast: false
+      matrix:
+        wx-version: ['v3.2.8.1']
+
     steps:
 
     # WxWidgets
@@ -29,7 +34,7 @@ jobs:
       with:
         repository: wxWidgets/wxWidgets
         path: wxWidgets
-        ref: v3.2.4
+        ref: ${{matrix.wx-version}}
         submodules: recursive
 
     - name: build and install wxWidgets
